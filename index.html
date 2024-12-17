@@ -352,16 +352,12 @@
     <div class="form-container">
         <img src="https://sefaruniversal.com/wp-content/uploads/2021/01/Logo-de-Sefar-Universal-nuevo-rediseno-pagina-web-Abogados-y-Genealogistas-letras-blancas.png" alt="Logo" class="logo">
         <h1>Formulario de comentarios de reuniones de genealogia</h1>
-        <form id="formulario" onsubmit="return validarFormulario(event)" action="https://formsubmit.co/ajax/sistemascol@sefarvzla.com" method="POST">
+        <form id="formulario" onsubmit="return validarFormulario(event)" action="https://formsubmit.co/sistemascol@sefarvzla.com" method="POST">
             <input type="hidden" name="_captcha" value="false">
             <input type="hidden" name="_template" value="table">
             <input type="hidden" name="_autoresponse" value="Gracias por enviar tus comentarios.">
             <input type="hidden" name="_honey" style="display:none">
             <input type="hidden" name="_format" value="html">
-            <input type="hidden" id="subject" name="_subject" value="">
-            <input type="hidden" id="uniqueId" name="_uniqueId" value="">
-            <input type="hidden" id="message" name="_message" value="">
-            <input type="hidden" name="_cc" value="gflorez@sefarvzla.com, crisantoantonio@gmail.com">
             <div class="form-field">
                 <label for="email" class="required">Correo Electrónico:</label>
                 <input type="email" id="email" name="email" required>
@@ -547,21 +543,18 @@
 
             // Modificar el mensaje del correo
             var mensaje = `
-                <h2>Se han enviado comentarios del formulario de Genealogia</h2>
-                <p><strong>Nombre:</strong> ${nombre} ${apellido}</p>
-                <p><strong>Correo Electrónico:</strong> ${formData.get('email')}</p>
-                <h3>Comentarios:</h3>
+                Nombre: ${nombre} ${apellido}\n
+                Correo Electrónico: ${formData.get('email')}\n
+                Comentarios:\n
             `;
             var comentarios = formData.getAll('comentarios[]');
             var titulos = formData.getAll('titulo[]');
             var prioridades = formData.getAll('prioridad[]');
             comentarios.forEach((comentario, index) => {
                 mensaje += `
-                    <div style="margin-bottom: 20px;">
-                        <p><strong>Título:</strong> ${titulos[index]}</p>
-                        <p><strong>Comentario:</strong> ${comentario}</p>
-                        <p><strong>Prioridad:</strong> ${prioridades[index]}</p>
-                    </div>
+                    Título: ${titulos[index]}\n
+                    Comentario: ${comentario}\n
+                    Prioridad: ${prioridades[index]}\n
                 `;
             });
             formData.set('_message', mensaje);
@@ -576,14 +569,19 @@
                 }
             }).then(response => {
                 loadingSpinner.style.display = 'none';
+                console.log(response); // Agregar log para depuración
                 if (response.ok) {
                     mostrarModal('Comentarios enviados con éxito. ¡Gracias!');
                     form.reset();
                 } else {
-                    mostrarModal('Hubo un problema al enviar los comentarios.');
+                    response.json().then(data => {
+                        console.log(data); // Agregar log para depuración
+                        mostrarModal('Hubo un problema al enviar los comentarios.');
+                    });
                 }
             }).catch(error => {
                 loadingSpinner.style.display = 'none';
+                console.log(error); // Agregar log para depuración
                 mostrarModal('Hubo un problema al enviar los comentarios.');
             });
         }
