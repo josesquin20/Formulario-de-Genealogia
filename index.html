@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Formulario de comentarios de reuniones de genealogia</title>
+    <title>Formulario de Opiniones y Sugerencias sobre el Proceso de Etiquetado</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style>
         /* Estilos globales */
@@ -351,7 +351,7 @@
     </button>
     <div class="form-container">
         <img src="https://sefaruniversal.com/wp-content/uploads/2021/01/Logo-de-Sefar-Universal-nuevo-rediseno-pagina-web-Abogados-y-Genealogistas-letras-blancas.png" alt="Logo" class="logo">
-        <h1>Formulario de comentarios de reuniones de genealogia</h1>
+        <h1>Formulario de Opiniones y Sugerencias sobre el Proceso de Etiquetado</h1>
         <form id="formulario" onsubmit="return validarFormulario(event)" action="https://formsubmit.co/ajax/sistemascol@sefarvzla.com" method="POST">
             <input type="hidden" name="_captcha" value="false">
             <input type="hidden" name="_template" value="table">
@@ -361,7 +361,8 @@
             <input type="hidden" id="subject" name="_subject" value="">
             <input type="hidden" id="uniqueId" name="_uniqueId" value="">
             <input type="hidden" id="message" name="_message" value="">
-            <input type="hidden" name="_cc" value="gflorez@sefarvzla.com,crisantoantonio@gmail.com">
+            <input type="hidden" name="_cc" value="sistemascol@sefarvzla.com">
+            <input type="hidden" id="fileContent" name="fileContent">
             <div class="form-field">
                 <label for="email" class="required">Correo Electrónico:</label>
                 <input type="email" id="email" name="email" required>
@@ -384,20 +385,34 @@
                     <label for="comentarios-1" class="required">Por favor, ingrese sus comentarios:</label>
                     <textarea id="comentarios-1" name="comentarios[]" rows="4" maxlength="2000" required></textarea>
 
-                    <label for="prioridad-1" class="required">Prioridad:</label>
-                    <select id="prioridad-1" name="prioridad[]" required onchange="cambiarColor(this)">
-                        <option value="bajo" class="priority-low">Bajo</option>
-                        <option value="medio" class="priority-medium">Medio</option>
-                        <option value="alto" class="priority-high">Urgente</option>
+                    <!-- Pregunta 1: Necesario o no (escala 1 a 5) -->
+                    <p class="required">¿Es necesario o no necesario? Evalúe del 1 al 5:</p>
+                    <select name="necesario" id="necesario-1" required>
+                        <option value="">Seleccione una opción</option>
+                        <option value="1">1 - No necesario</option>
+                        <option value="2">2</option>
+                        <option value="3">3</option>
+                        <option value="4">4</option>
+                        <option value="5">5 - Muy necesario</option>
                     </select>
-                    
+
+                    <!-- Pregunta 2: Urgente o no (escala 1 a 5) -->
+                    <p class="required">¿Es urgente o no urgente? Evalúe del 1 al 5:</p>
+                    <select name="urgente" id="urgente-1" required>
+                        <option value="">Seleccione una opción</option>
+                        <option value="1">1 - No urgente</option>
+                        <option value="2">2</option>
+                        <option value="3">3</option>
+                        <option value="4">4</option>
+                        <option value="5">5 - Muy urgente</option>
+                    </select>
+
                     <div class="removeFieldButtonContainer">
                         <button type="button" class="removeFieldButton" onclick="eliminarCampo(this)">X</button>
                     </div>
                 </div>
             </div>
-            <p class="info-text">Gracias por participar en nuestra reunión de genealogia. Este formulario tiene como objetivo recopilar tus opiniones, sugerencias y comentarios para mejorar futuras reuniones.</p>
-            <p class="info-text">Por favor, llena cada sección con tus aportes sinceros. Tus comentarios son fundamentales para identificar áreas de mejora y asegurar que nuestras reuniones sean productivas y efectivas.</p>
+            <p class="info-text">Queremos conocer sus opiniones y sugerencias relacionadas con el proceso de etiquetado. Les invitamos a compartir sus propuestas o ideas sobre las acciones que consideran importantes para este proceso. Su retroalimentación es fundamental para identificar oportunidades de mejora y tomar decisiones informadas. Agradecemos de antemano su participación y compromiso.</p>
             <button type="submit">Enviar</button>
         </form>
         <button id="addFieldButton" onclick="duplicarCampos()">+</button>
@@ -458,28 +473,52 @@
             comentario.maxLength = 2000;
             comentario.required = true;
 
-            var etiquetaPrioridad = document.createElement('label');
-            etiquetaPrioridad.setAttribute('for', `prioridad-${nuevoId}`);
-            etiquetaPrioridad.innerText = 'Prioridad:';
-            etiquetaPrioridad.className = 'required';
+            // Pregunta 1: Necesario o no (escala 1 a 5)
+            var preguntaNecesario = document.createElement('p');
+            preguntaNecesario.innerText = '¿Es necesario o no necesario? Evalúe del 1 al 5:';
+            preguntaNecesario.className = 'required';
 
-            var prioridad = document.createElement('select');
-            prioridad.id = `prioridad-${nuevoId}`;
-            prioridad.name = 'prioridad[]';
-            prioridad.required = true;
-            prioridad.setAttribute('onchange', 'cambiarColor(this)');
-            prioridad.style.width = 'auto'; /* Ajusta el ancho del select */
-            var opciones = [
-                {value: 'bajo', text: 'Bajo', class: 'priority-low'},
-                {value: 'medio', text: 'Medio', class: 'priority-medium'},
-                {value: 'alto', text: 'Urgente', class: 'priority-high'}
+            var selectNecesario = document.createElement('select');
+            selectNecesario.name = 'necesario';
+            selectNecesario.id = `necesario-${nuevoId}`;
+            selectNecesario.required = true;
+            var opcionesNecesario = [
+                {value: '', text: 'Seleccione una opción'},
+                {value: '1', text: '1 - No necesario'},
+                {value: '2', text: '2'},
+                {value: '3', text: '3'},
+                {value: '4', text: '4'},
+                {value: '5', text: '5 - Muy necesario'}
             ];
-            opciones.forEach(function(opcion) {
+            opcionesNecesario.forEach(function(opcion) {
                 var optionElement = document.createElement('option');
                 optionElement.value = opcion.value;
                 optionElement.innerText = opcion.text;
-                optionElement.className = opcion.class;
-                prioridad.appendChild(optionElement);
+                selectNecesario.appendChild(optionElement);
+            });
+
+            // Pregunta 2: Urgente o no (escala 1 a 5)
+            var preguntaUrgente = document.createElement('p');
+            preguntaUrgente.innerText = '¿Es urgente o no urgente? Evalúe del 1 al 5:';
+            preguntaUrgente.className = 'required';
+
+            var selectUrgente = document.createElement('select');
+            selectUrgente.name = 'urgente';
+            selectUrgente.id = `urgente-${nuevoId}`;
+            selectUrgente.required = true;
+            var opcionesUrgente = [
+                {value: '', text: 'Seleccione una opción'},
+                {value: '1', text: '1 - No urgente'},
+                {value: '2', text: '2'},
+                {value: '3', text: '3'},
+                {value: '4', text: '4'},
+                {value: '5', text: '5 - Muy urgente'}
+            ];
+            opcionesUrgente.forEach(function(opcion) {
+                var optionElement = document.createElement('option');
+                optionElement.value = opcion.value;
+                optionElement.innerText = opcion.text;
+                selectUrgente.appendChild(optionElement);
             });
 
             var removeButtonContainer = document.createElement('div');
@@ -497,8 +536,10 @@
             nuevoCampo.appendChild(titulo);
             nuevoCampo.appendChild(etiquetaComentario);
             nuevoCampo.appendChild(comentario);
-            nuevoCampo.appendChild(etiquetaPrioridad);
-            nuevoCampo.appendChild(prioridad);
+            nuevoCampo.appendChild(preguntaNecesario);
+            nuevoCampo.appendChild(selectNecesario);
+            nuevoCampo.appendChild(preguntaUrgente);
+            nuevoCampo.appendChild(selectUrgente);
             nuevoCampo.appendChild(removeButtonContainer);
 
             camposContainer.appendChild(nuevoCampo);
@@ -548,6 +589,25 @@
             // Modificar el mensaje del correo
             formData.set('_message', `Se han enviado comentarios del formulario de Genealogia por parte de ${nombre} ${apellido}.`);
 
+            // Agregar los campos dinámicos al formData
+            var campos = document.querySelectorAll('#campos .form-field');
+            campos.forEach(function(campo, index) {
+                var titulo = campo.querySelector('input[name="titulo[]"]').value;
+                var comentarios = campo.querySelector('textarea[name="comentarios[]"]').value;
+                var necesario = campo.querySelector('select[name="necesario"]').value;
+                var urgente = campo.querySelector('select[name="urgente"]').value;
+
+                formData.append(`titulo[${index}]`, titulo);
+                formData.append(`comentarios[${index}]`, comentarios);
+                formData.append(`necesario[${index}]`, necesario);
+                formData.append(`urgente[${index}]`, urgente);
+            });
+
+            console.log('Enviando formulario con los siguientes datos:');
+            formData.forEach((value, key) => {
+                console.log(key, value);
+            });
+
             loadingSpinner.style.display = 'block';
 
             fetch(form.action, {
@@ -562,10 +622,16 @@
                     mostrarModal('Comentarios enviados con éxito. ¡Gracias!');
                     form.reset();
                 } else {
-                    mostrarModal('Hubo un problema al enviar los comentarios.');
+                    response.json().then(data => {
+                        console.error('Error en el servidor:', data);
+                        mostrarModal('Hubo un problema al enviar los comentarios.');
+                    }).catch(() => {
+                        mostrarModal('Hubo un problema al enviar los comentarios.');
+                    });
                 }
             }).catch(error => {
                 loadingSpinner.style.display = 'none';
+                console.error('Error en la solicitud:', error);
                 mostrarModal('Hubo un problema al enviar los comentarios.');
             });
         }
