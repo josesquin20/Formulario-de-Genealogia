@@ -380,14 +380,14 @@
             <div id="campos">
                 <div class="form-field" id="campo-1">
                     <label for="titulo-1" class="required">Título:</label>
-                    <input type="text" id="titulo-1" name="titulo[]" class="titulo-corto" required>
+                    <input type="text" id="titulo-1" name="titulo" class="titulo-corto" required>
 
                     <label for="comentarios-1" class="required">Por favor, ingrese sus comentarios:</label>
-                    <textarea id="comentarios-1" name="comentarios[]" rows="4" maxlength="2000" required></textarea>
+                    <textarea id="comentarios-1" name="comentarios" rows="4" maxlength="2000" required></textarea>
 
                     <!-- Pregunta 1: Necesario o no (escala 1 a 5) -->
                     <p class="required">¿Es necesario o no necesario? Evalúe del 1 al 5:</p>
-                    <select name="necesario" id="necesario-1" required>
+                    <select name="Es-necesario-o-no-necesario-Evalúe-del-1-al-5" id="necesario-1" required>
                         <option value="">Seleccione una opción</option>
                         <option value="1">1 - No necesario</option>
                         <option value="2">2</option>
@@ -398,7 +398,7 @@
 
                     <!-- Pregunta 2: Urgente o no (escala 1 a 5) -->
                     <p class="required">¿Es urgente o no urgente? Evalúe del 1 al 5:</p>
-                    <select name="urgente" id="urgente-1" required>
+                    <select name="Es-urgente-o-no-urgente-Evalúe-del-1-al-5" id="urgente-1" required>
                         <option value="">Seleccione una opción</option>
                         <option value="1">1 - No urgente</option>
                         <option value="2">2</option>
@@ -456,7 +456,7 @@
 
             var titulo = document.createElement('input');
             titulo.id = `titulo-${nuevoId}`;
-            titulo.name = 'titulo[]';
+            titulo.name = 'titulo';
             titulo.type = 'text';
             titulo.className = 'titulo-corto';
             titulo.required = true;
@@ -468,7 +468,7 @@
 
             var comentario = document.createElement('textarea');
             comentario.id = `comentarios-${nuevoId}`;
-            comentario.name = 'comentarios[]';
+            comentario.name = 'comentarios';
             comentario.rows = 4;
             comentario.maxLength = 2000;
             comentario.required = true;
@@ -479,7 +479,7 @@
             preguntaNecesario.className = 'required';
 
             var selectNecesario = document.createElement('select');
-            selectNecesario.name = 'necesario';
+            selectNecesario.name = 'Es-necesario-o-no-necesario-Evalúe-del-1-al-5';
             selectNecesario.id = `necesario-${nuevoId}`;
             selectNecesario.required = true;
             var opcionesNecesario = [
@@ -503,7 +503,7 @@
             preguntaUrgente.className = 'required';
 
             var selectUrgente = document.createElement('select');
-            selectUrgente.name = 'urgente';
+            selectUrgente.name = 'Es-urgente-o-no-urgente-Evalúe-del-1-al-5';
             selectUrgente.id = `urgente-${nuevoId}`;
             selectUrgente.required = true;
             var opcionesUrgente = [
@@ -588,20 +588,6 @@
 
             // Modificar el mensaje del correo
             formData.set('_message', `Se han enviado comentarios del formulario de Genealogia por parte de ${nombre} ${apellido}.`);
-
-            // Agregar los campos dinámicos al formData
-            var campos = document.querySelectorAll('#campos .form-field');
-            campos.forEach(function(campo, index) {
-                var titulo = campo.querySelector('input[name="titulo[]"]').value;
-                var comentarios = campo.querySelector('textarea[name="comentarios[]"]').value;
-                var necesario = campo.querySelector('select[name="necesario"]').value;
-                var urgente = campo.querySelector('select[name="urgente"]').value;
-
-                formData.append(`titulo[${index}]`, titulo);
-                formData.append(`comentarios[${index}]`, comentarios);
-                formData.append(`necesario[${index}]`, necesario);
-                formData.append(`urgente[${index}]`, urgente);
-            });
 
             console.log('Enviando formulario con los siguientes datos:');
             formData.forEach((value, key) => {
